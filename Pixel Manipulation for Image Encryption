@@ -1,0 +1,65 @@
+from PIL import Image
+
+def encrypt_image(image_path, output_path, key):
+    # Open the image
+    image = Image.open(image_path)
+    pixels = image.load()
+
+    # Encrypt the image by modifying each pixel's RGB values
+    for i in range(image.width):
+        for j in range(image.height):
+            r, g, b = pixels[i, j]
+
+            # Apply encryption operation (e.g., XOR with key)
+            r = (r + key) % 256
+            g = (g + key) % 256
+            b = (b + key) % 256
+
+            # Update the pixel value
+            pixels[i, j] = (r, g, b)
+
+    # Save the encrypted image
+    image.save(output_path)
+    print(f"Image encrypted and saved as {output_path}")
+
+def decrypt_image(image_path, output_path, key):
+    # Open the image
+    image = Image.open(image_path)
+    pixels = image.load()
+
+    # Decrypt the image by reversing the encryption operation
+    for i in range(image.width):
+        for j in range(image.height):
+            r, g, b = pixels[i, j]
+
+            # Apply decryption operation (reverse of encryption)
+            r = (r - key) % 256
+            g = (g - key) % 256
+            b = (b - key) % 256
+
+            # Update the pixel value
+            pixels[i, j] = (r, g, b)
+
+    # Save the decrypted image
+    image.save(output_path)
+    print(f"Image decrypted and saved as {output_path}")
+
+def main():
+    print("Image Encryption/Decryption Tool")
+    choice = input("Would you like to encrypt or decrypt an image? (e/d): ").lower()
+
+    if choice not in ['e', 'd']:
+        print("Invalid choice! Please choose 'e' for encryption or 'd' for decryption.")
+        return
+
+    image_path = input("Enter the path to the image file: ")
+    output_path = input("Enter the path to save the output image: ")
+    key = int(input("Enter the encryption/decryption key (integer): "))
+
+    if choice == 'e':
+        encrypt_image(image_path, output_path, key)
+    else:
+        decrypt_image(image_path, output_path, key)
+
+if __name__ == "__main__":
+    main()
